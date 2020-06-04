@@ -1,26 +1,27 @@
 from xml.dom import minidom
 from svgpathtools import parse_path, Line, Path, wsvg, svg2paths
 
-def fixGcode(fname):
-    #input file
-    fin = open(fname + ".gcode", "rt")
-    #output file to write the result to
-    fout = open(fname + "_changed.gcode", "wt")
+# def fixGcode(fname):
+#     #input file
+#     fin = open(fname + ".gcode", "rt")
+#     #output file to write the result to
+#     fout = open(fname + "_changed.gcode", "wt")
 
-    began = False
+#     began = False
 
-    #for each line in the input file
-    for line in fin.readlines():
-        #read replace the string and write to output file
-        if not began:
-            if "; cut" in line:
-                began = True
-        else:
-            fout.write(line.replace('G1', 'G00'))
+#     #for each line in the input file
+#     for line in fin.readlines():
+#         #read replace the string and write to output file
+#         if not began:
+#             if "; cut" in line:
+#                 began = True
+#         else:
+#             fout.write(line.replace('G1', 'G00'))
 
-    #close input and output files
-    fin.close()
-    fout.close()
+#     #close input and output files
+#     fin.close()
+#     fout.close()
+
 def writeGcode(gcode_file, svg_path):
     gcodeString = ""
 
