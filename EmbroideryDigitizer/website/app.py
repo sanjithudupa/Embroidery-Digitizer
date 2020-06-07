@@ -1,6 +1,9 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
+import sys
+sys.path.append(os.getcwd() + "/python/")
+from embroidery import createEmbroidery
 
 app = Flask(__name__)
 
@@ -91,8 +94,10 @@ def process_image():
 
             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            return render_template("process.html", fname=filename)
-            
+            createEmbroidery(filename)
+
+            return render_template("simulate.html", fname=filename)
+
         print('image saved')
         # return redirect(request.url)
 
@@ -100,4 +105,4 @@ def process_image():
 
 
 if __name__ == '__main__':
-   app.run(debug = True)
+    app.run(debug = True)

@@ -55,6 +55,7 @@ def createEmbroidery(filename):
     pyembroidery.convert(gcode_file, output_file)
 
 
+
 # os.remove(gcode_file)
 
 
