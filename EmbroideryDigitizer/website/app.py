@@ -32,9 +32,17 @@ def allowed_file_size(f):
     else:
         return  False
 
+def convert_to_array(gcode):
+    full = []
+    for line in gcode.splitlines():
+        if "G00" in line:
+            x = float(line[line.index('X') + 1: line.index(' ', line.index('X'))])
+            y = float(line[line.index("Y") + 1:])
+            full.append([x,y])
+    return (full)
 
 
-@app.route("/upload-image", methods=["GET"])
+@app.route("/upload", methods=["GET"])
 def upload_image():
  
     # if request.method == "POST":
@@ -96,13 +104,19 @@ def process_image():
 
             createEmbroidery(filename)
 
-            return render_template("simulate.html", fname=filename)
+
+
+            return render_template("sim.html", fname=filename)
 
         print('image saved')
         # return redirect(request.url)
 
     return render_template("process.html", fname="upload failed")
 
+@app.route("/sim", methods=["GET"])
+def sim():
+    return render_template("sim.html")
 
 if __name__ == '__main__':
+    print(os.getcwd() + "../../python")
     app.run(debug = True)

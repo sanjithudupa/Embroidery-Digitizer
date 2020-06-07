@@ -12,8 +12,6 @@ import sys
 
 # fixGcode("gcode2")
 
-print(sys.path)
-
 def writeGcode(gcode_file, svg_path):
     gcodeString = ""
 
@@ -54,7 +52,12 @@ def createEmbroidery(filename):
 
     pyembroidery.convert(gcode_file, output_file)
 
+def cleanup(filename):
+    os.remove("tmp/"+filename+".gcode")
+    os.remove("uploads/" + filename)
 
+
+# cleanup("noviWildcatOnly.svg")
 
 # os.remove(gcode_file)
 
