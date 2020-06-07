@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+   <style>
+      #file-drop-div {
+         border-color: #6c757d; 
+         margin: 0 auto; 
+         border-style: dashed; 
+         border-radius: 5px; 
+         width: 50%; 
+         height:200px
+      }
+      #image {
+         opacity: 0; 
+         z-index: 2; 
+         position: absolute; 
+         width: 50%; 
+         height:200px; 
+         border-radius: 5px; 
+         text-align: center;
+      }
+      #svg-container {
+         display: flex; 
+         align-items: center; 
+         height: 100%;
+      }
+      #upload-icon {
+         display: block; 
+         margin: auto; 
+         margin-top:40px;
+      }
+      
+   </style>
+
+   <title>Upload Files</title>
+</head>
+<body>
+
+   <br>
+
+   <!-- <form action="/file-upload" class="dropzone" id="my-awesome-dropzone">
+   
+   </form>
+
+   <script>
+      Dropzone.options.myAwesomeDropzone = {
+         paramName: "image",
+         maxFiles: 1,
+         createImageThumbnails: false
+      };
+   </script> -->
+
+<!-- 
+   <div id="dropzone" class="needsclick dz-clickable">
+      <div class="dz-message needsclick">
+        Drop SVG file here or click to upload.<br>
+        <span class="note needsclick">Only the path attribute is taken into account, everything else is ignored. The preview can be a bit strange because of that.</span>
+      </div>
+    </div> -->
+
+   
+   <form action = "/process-image" method = "POST" enctype="multipart/form-data">
+      <div id="file-drop-div" ondragenter="fileDragged(event)" onclick="fileDragged()" onmouseup="fileNotDragged()" ondragleave="fileNotDragged(event)">
+         <input onchange="fileAdded()" type="file" name="image" id="image">
+         
+         <div id="svg-container">
+            <svg id="upload-icon" class="bi bi-upload" width="10%" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+               <path fill-rule="evenodd" d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8zM5 4.854a.5.5 0 0 0 .707 0L8 2.56l2.293 2.293A.5.5 0 1 0 11 4.146L8.354 1.5a.5.5 0 0 0-.708 0L5 4.146a.5.5 0 0 0 0 .708z"/>
+               <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 2z"/>
+            </svg>
+         </div>
+         
+         <div id="help-label-container" style="text-align: center; margin-top: -50px;">
+            <label id="upload-help-label"><strong>Click to select or drag an image...</strong> <br> <strong style="color: red">{{result}}</strong> </label>
+         </div>
+         
+      </div>
+      <br>
+      <div style="text-align: center;">
+         <button type="submit" class="btn btn-primary" id="upload-button" style="display: none;">Upload</button>
+      </div>
+      
+   </form>
+   
+   <script>
+      let file_drop_div = document.getElementById("file-drop-div");
+      let image = document.getElementById("image");
+      let upload_help_label = document.getElementById("upload-help-label");
+      let upload_button = document.getElementById("upload-button");
+
+      function fileDragged() {
+         file_drop_div.style.borderStyle = "solid";
+         file_drop_div.style.borderColor = "black";
+         file_drop_div.style.backgroundColor = "#f8f9fa";
+      }
+      function fileNotDragged() {
+         file_drop_div.style.borderStyle = "dashed";
+         file_drop_div.style.borderColor = "#6c757d";
+         file_drop_div.style.backgroundColor = "transparent";
+      }
+      function resetFileUpload(){
+         image.value = ""
+         upload_help_label.innerHTML = "<strong>Click to select or drag an image...</strong>"
+         fileNotDragged();
+      }
+      function fileAdded(){
+         fileNotDragged();
+         let fname = image.value.split(/(\\|\/)/g).pop();
+         if(fname.includes(".")){
+         upload_help_label.innerHTML = "Selected <strong>" + fname + "</strong>";
+         upload_button.style.display = "inline-block";
+         }else{
+         resetFileUpload();
+         }
+      }
+   </script>
+
+
+
+
+<!-- 
+   <form action = "/process-image" method = "POST" enctype="multipart/form-data" ></form>
+      <div style="width: 50%; height:200px; text-align: center; ">
+   
+         <button style="position: absolute; width: 50%; height:200px; border-style: dashed; border-radius: 5px;"><img src="https://lh3.googleusercontent.com/proxy/WXCBiV3LkETEMEGKyTPkNnBWgP7dI48tDLTKQ-uXmXK4IZ0_o7hrhx8KPMKJ81AD2D3NENYl1K8N1e8ntenxw6bFL7jSNLbAPOq6XE-6Behh6nfyfwKF4sYGM3m8tg" style="width: 64px; margin: auto;"></button>
+         <input type="file" name="image" id="image" style="margin: 0 auto; z-index: 2; position: absolute; width: 50%; height:200px; border-radius: 5px; text-align: center; margin: auto;">
+         
+      </div> 
+      <button class="btn btn-primary" type="submit">Upload</button>
+      
+   </form> -->
+<!-- 
+   <input type="file" name="file-2[]" id="file-2" class="inputfile inputfile-2" data-multiple-caption="{count} files selected" multiple />
+	<label for="file-2"><span>Choose a file&hellip;</span></label>
+
+   
+   <script src="../website/"></script> -->
+
+
+
+
+<!--    
+    <script>
+      $("button").on("click", function() { $("input").trigger("click");});
+    </script> -->
+
+
+</body>
+</html>
