@@ -64,7 +64,7 @@
                     // but before parent shadow-roots are created. That causes WebGL initialization to
                     // fail. requestAnimationFrame works around this. Firefox doesn't have this problem.
                     window.requestAnimationFrame(function () {
-                        renderPath = startRenderPath({}, self.$.renderPathCanvas, null, "js/shaders/", function (renderPath) {
+                        renderPath = startRenderPath({}, self.$.renderPathCanvas, null, "../static/simulator/js/shaders/", function (renderPath) {
                             renderPath.fillPathBuffer(self.parsedGcode, 0, self.cutterDiameter, self.cutterAngle, self.cutterHeight);
                             self.maxTime = renderPath.totalTime;
                             self.maxTimeRounded = Math.ceil(renderPath.totalTime * 10) / 10;
