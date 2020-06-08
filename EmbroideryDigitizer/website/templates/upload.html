@@ -66,9 +66,9 @@
     </div> -->
 
    
-   <form action = "/process-image" method = "POST" enctype="multipart/form-data">
+   <form action = "/preview" method = "POST" enctype="multipart/form-data">
       <div id="file-drop-div" ondragenter="fileDragged(event)" onclick="fileDragged()" onmouseup="fileNotDragged()" ondragleave="fileNotDragged(event)">
-         <input onchange="fileAdded()" type="file" name="image" id="image">
+         <input onchange="fileAdded()" type="file" name="image" accept=".svg" id="image">
          
          <div id="svg-container">
             <svg id="upload-icon" class="bi bi-upload" width="10%" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -83,8 +83,21 @@
          
       </div>
       <br>
-      <div style="text-align: center;">
-         <button type="submit" class="btn btn-primary" id="upload-button" style="display: none;">Upload</button>
+      <div id="show-after"style="text-align: center;visibility:hidden">
+         Pick an export format:
+         <br>
+         <select name="extension" onchange="selectChange()" id="file-format-select" class="custom-select" style="width: 10%;">
+            <option value="none" selected>Choose...</option>
+            <option value=".pes">PES</option>
+            <option value=".pec">PEC</option>
+            <option value=".dst">DST</option>
+            <option value=".exp">EXP</option>
+            <option value=".jst">JST</option>
+            <option value=".vp3">VP3</option>
+            <option value=".u01">U01</option>
+         </select>
+         <br>
+         <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
       </div>
       
    </form>
@@ -93,7 +106,11 @@
       let file_drop_div = document.getElementById("file-drop-div");
       let image = document.getElementById("image");
       let upload_help_label = document.getElementById("upload-help-label");
-      let upload_button = document.getElementById("upload-button");
+      let show_after = document.getElementById("show-after");
+      let format_select = document.getElementById("file-format-select")
+      let upload_button = document.getElementById("upload-button")
+
+      upload_button.setAttribute("disabled", false)
 
       function fileDragged() {
          file_drop_div.style.borderStyle = "solid";
@@ -115,9 +132,16 @@
          let fname = image.value.split(/(\\|\/)/g).pop();
          if(fname.includes(".")){
          upload_help_label.innerHTML = "Selected <strong>" + fname + "</strong>";
-         upload_button.style.display = "inline-block";
+         show_after.style.visibility = "visible";
          }else{
          resetFileUpload();
+         }
+      }
+      function selectChange(){
+         if(format_select.value != "none"){
+            upload_button.removeAttribute("disabled")
+         }else{
+            upload_button.setAttribute("disabled", false)
          }
       }
    </script>
@@ -151,6 +175,11 @@
       $("button").on("click", function() { $("input").trigger("click");});
     </script> -->
 
+   <footer class="py-4 bg-light text-black-50" style="position: fixed; bottom: 0; width: 100%;">
+      <div class="container text-center">
+         <small><a href="https://www.youtube.com/channel/UCGHZqwNqihHgYj8rZFcptvQ" target="_blank">&copy; Sanjith Udupa 2020</a></small>
+      </div>
+   </footer>
 
 </body>
 </html>

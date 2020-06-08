@@ -1,13 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import sys
 sys.path.append(os.getcwd() + "/python/")
-from embroidery import createEmbroidery
+from embroidery import createEmbroidery, cleanup
 
 app = Flask(__name__)
 
-app.config["IMAGE_UPLOADS"] = "/Users/sanjithudupa/Documents/GitHub/Embroidery-Digitizer/EmbroideryDigitizer/uploads"
+app.config["IMAGE_UPLOADS"] = app.root_path + "/../uploads"
+app.config["OUTPUT_FOLDER"] = app.root_path + "/../out"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 
@@ -41,6 +42,9 @@ def convert_to_array(gcode):
             full.append([x,y])
     return (full)
 
+@app.route("/")
+def home():
+    return redirect(url_for("upload_image"))
 
 @app.route("/upload", methods=["GET"])
 def upload_image():
@@ -72,11 +76,13 @@ def upload_image():
 
     return render_template("upload.html", result=result)
 
-@app.route("/process-image", methods=["POST"])
+@app.route("/preview", methods=["POST"])
 def process_image():
 
     if request.files:
         
+        ext = request.form["extension"]
+
         image = request.files["image"]
 
         if not allowed_file_size(image):
@@ -102,21 +108,33 @@ def process_image():
 
             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            createEmbroidery(filename)
+            createEmbroidery(filename, ext)
 
+            gfile = open("tmp/" + filename + ".gcode")
 
+            gcodeArray = convert_to_array(gfile.read())
 
-            return render_template("sim.html", fname=filename)
+            cleanup(filename)
+
+            return render_template("sim.html", fname=filename, gcode_array=gcodeArray, fext=ext)
 
         print('image saved')
         # return redirect(request.url)
 
-    return render_template("process.html", fname="upload failed")
+    return render_template("process.html", fname="upload failed", gcodeArray="", fext="")
 
-@app.route("/sim", methods=["GET"])
-def sim():
-    return render_template("sim.html")
+@app.route("/download", methods=["POST"])
+def download_file():
+    # print(request.form["file_name"])
+    x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file_name"], as_attachment=True)
+    os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
+    return x
+
+# @app.route("/sim", methods=["GET"])
+# def sim():
+#     return render_template("sim.html")
 
 if __name__ == '__main__':
-    print(os.getcwd() + "../../python")
+    # print(os.getcwd() + "../../python")
+    # print(app.root_path)
     app.run(debug = True)
