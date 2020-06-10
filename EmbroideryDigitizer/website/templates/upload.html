@@ -97,6 +97,16 @@
             <option value=".u01">U01</option>
          </select>
          <br>
+         Path Fill:
+         <br>
+         <div class="input-group mb-3" style="width: 25%; margin: auto;">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <input type="checkbox" name="fill" id="fill" onchange="checkChange()">
+              </div>
+            </div>
+            <input name="repetitions" type="number" class="form-control" placeholder="<= Fill Repetitions" id="repetitions">
+          </div>
          <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
       </div>
       
@@ -109,8 +119,11 @@
       let show_after = document.getElementById("show-after");
       let format_select = document.getElementById("file-format-select")
       let upload_button = document.getElementById("upload-button")
+      let checkbox = document.getElementById("fill")
+      let repetitions = document.getElementById("repetitions")
 
       upload_button.setAttribute("disabled", false)
+      repetitions.setAttribute("disabled", true)
 
       function fileDragged() {
          file_drop_div.style.borderStyle = "solid";
@@ -144,6 +157,15 @@
             upload_button.setAttribute("disabled", false)
          }
       }
+      function checkChange(){
+         let currentValue = repetitions.getAttribute("disabled")
+         if(currentValue){
+            repetitions.removeAttribute("disabled")
+         }else{
+            repetitions.setAttribute("disabled", true)
+         }
+      }
+
    </script>
 
 

@@ -83,7 +83,17 @@ def process_image():
         
         ext = request.form["extension"]
 
+        repetitions = 0
+
+        fillcheck = request.form.get("fill")
+
+        fill = False
+
         image = request.files["image"]
+
+        if fillcheck == "on":
+            repetitions = request.form["repetitions"]
+            fill = True
 
         if not allowed_file_size(image):
             print("file is too big")
@@ -108,7 +118,7 @@ def process_image():
 
             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            createEmbroidery(filename, ext)
+            createEmbroidery(filename, ext, int(repetitions), fill)
 
             gfile = open("tmp/" + filename + ".gcode")
 
