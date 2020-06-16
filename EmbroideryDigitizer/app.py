@@ -7,8 +7,8 @@ from embroidery import createEmbroidery, cleanup
 
 app = Flask(__name__)
 
-app.config["IMAGE_UPLOADS"] = app.root_path + "/../uploads"
-app.config["OUTPUT_FOLDER"] = app.root_path + "/../out"
+app.config["IMAGE_UPLOADS"] = app.root_path + "/uploads"
+app.config["OUTPUT_FOLDER"] = app.root_path + "/out"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 
