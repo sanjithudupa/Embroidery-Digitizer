@@ -2,13 +2,15 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import sys
-sys.path.append(os.getcwd() + "/python/")
+sys.path.append(os.getcwd() + "/EmbroideryDigitizer/python/")
 from embroidery import createEmbroidery, cleanup
 
 app = Flask(__name__)
 
-app.config["IMAGE_UPLOADS"] = app.root_path + "/uploads"
-app.config["OUTPUT_FOLDER"] = app.root_path + "/out"
+print(os.getcwd())
+
+app.config["IMAGE_UPLOADS"] = "uploads"
+app.config["OUTPUT_FOLDER"] = "out"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 
@@ -155,4 +157,5 @@ def about():
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    app.run(threaded=True, port=5000)
+    print(app.root_path)
+    app.run()
