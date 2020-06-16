@@ -39,9 +39,13 @@
       
    </style>
 
-   <title>Upload Files</title>
+   <title>Embroidery Digitizer</title>
 </head>
 <body>
+
+   <br>
+
+   <h1 style="text-align: center;">Upload an SVG File for Embroidery</h1>
 
    <br>
 
@@ -82,6 +86,12 @@
          </div>
          
       </div>
+
+      <div style="text-align: center;" id="separate-div">
+         <br>
+         Separate paths will be separate colors
+      </div>
+      
       <br>
       <div id="show-after"style="text-align: center;visibility:hidden">
          Pick an export format:
@@ -105,12 +115,13 @@
                 <input type="checkbox" name="fill" id="fill" onchange="checkChange()">
               </div>
             </div>
-            <input name="repetitions" type="number" class="form-control" placeholder="<= Fill Repetitions" id="repetitions">
+            <input name="repetitions" type="number" class="form-control" placeholder="Fill repetitions" id="repetitions">
           </div>
-         <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
+         <button type="submit" class="btn btn-primary" id="upload-button" onclick="startLoadingAnimation()">Upload</button>
       </div>
       
    </form>
+
    
    <script>
       let file_drop_div = document.getElementById("file-drop-div");
@@ -121,6 +132,7 @@
       let upload_button = document.getElementById("upload-button")
       let checkbox = document.getElementById("fill")
       let repetitions = document.getElementById("repetitions")
+      let separate_div = document.getElementById("separate-div")
 
       upload_button.setAttribute("disabled", false)
       repetitions.setAttribute("disabled", true)
@@ -145,6 +157,7 @@
          let fname = image.value.split(/(\\|\/)/g).pop();
          if(fname.includes(".")){
          upload_help_label.innerHTML = "Selected <strong>" + fname + "</strong>";
+         separate_div.style.display = "none";
          show_after.style.visibility = "visible";
          }else{
          resetFileUpload();
@@ -164,6 +177,9 @@
          }else{
             repetitions.setAttribute("disabled", true)
          }
+      }
+      function startLoadingAnimation(){
+         upload_button.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'></div>"
       }
 
    </script>

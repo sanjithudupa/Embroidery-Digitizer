@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toast.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toastify.css') }}">
+    <title>Embroidery Simulator</title>
+</head>
+<body>
+
+    <script src="{{ url_for('static', filename='js/toastify.js') }}"></script>
+
+    <div style="text-align: center;">
+        <h1>Embroidery Complete</h1>
+
+        <h3>Preview:</h3>
+
+        <canvas id="sim_canvas" width="500%" height="500%" style="border:1px solid #d3d3d3;">Sorry, your browser doesn't support the embroidery simulation.</canvas>
+        
+        <br>
+
+        <div id="progress_bar">
+            <div class="progress" style="width: 35%; margin: auto;">
+                <div id="sim_progress" style="width: 0%;"class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+
+        <div id="run_button_holder">
+            <br style="margin: 10px;">
+            <button class="btn btn-outline-success" onclick="run()" id="run_button">Animate</button>
+            
+        </div>
+
+        <br style="margin-top: 1px;">
+
+
+        <hr style="width: 75%; margin: auto; margin-top: 0;">
+
+        <form action="/download" method="post" id="download_form">
+            <br>
+            <span id="download_time">Your download should begin automatically, if not:</span>
+            <br>
+            <input name="file_name" type="hidden" value="{{fname}}{{fext}}"/>
+            <button class="btn btn-primary" type="submit" id="download_button">Download File</button>
+        </form>
+
+        <div id="snackbar">{{toast_message}}</div>
+        
+        <script>
+            const showPercent = 35;
+            const M_amount = 500000000;
+
+            let toast_message = "{{ toast_message }}"
+
+            function randomColor(){
+                const randomColor = Math.floor(Math.random()*16777215).toString(16);
+                return "#" + randomColor
+            }
+
+            function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms));}
+            
+            showToast()
+            function showToast() {
+                if(toast_message != ""){
+                    let x = document.getElementById("snackbar");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                
+                }
+            }
+
+            async function run(){
+                let run_button = document.getElementById("run_button")
+                let run_button_holder = document.getElementById("run_button_holder")
+                let progress_bar = document.getElementById("progress_bar")
+                let progress = document.getElementById("sim_progress")
+                
+                run_button.style.display = "none";
+                progress_bar.style.display = "block";
+                progress.style.width = "0%"
+
+                var canvas = document.getElementById("sim_canvas");
+                var ctx = canvas.getContext("2d");
+                var points =  JSON.parse("{{ gcode_array }}");
+                let total = points.length
+
+                let width = canvas.width
+                let height = canvas.height
+
+                let multiply = 2
+
+                let max = Math.max(total)
+                
+                run_button.innerHTML = "Animate " + total.toString() + " stitches"
+
+                ctx.clearRect(0, 0, width, height);
+                
+                ctx.moveTo(points[0][0] * multiply ,points[0][1] * multiply);
+                ctx.strokeStyle = randomColor()
+                ctx.beginPath();
+                
+                for (i = 1; i < total; i++) {
+                    let x = points[i][0] * multiply;
+                    let y = points[i][1] * multiply;
+                    
+                    if(x == multiply*M_amount && y == multiply*M_amount){
+                        ctx.closePath();
+                        ctx.moveTo(points[i+1][0] * multiply, points[i+1][1] * multiply)
+                        let newColor = randomColor()
+                        let toastify = Toastify({
+                            text: "Started a new path with color: " + newColor,
+                            duration: 2000,
+                            backgroundColor: newColor,
+                            position: 'right'
+                        }).showToast();
+                        ctx.strokeStyle = newColor
+                        ctx.beginPath();
+                    }else{
+                        ctx.lineTo(x,y);
+
+                        ctx.stroke();
+
+                        let percent = (100 * (i/total))
+                        if(percent >= showPercent){
+                            progress.innerHTML = i.toString() + " stitches"
+                        }else{
+                            progress.innerHTML = ""
+                        }
+                        progress.style.width = percent.toString() + "%"
+                    }
+
+                   
+
+                    await sleep(20);
+                }
+
+                await sleep(1000);
+
+                run_button.style.display = "inline-block";
+                progress_bar.style.display = "none";
+
+                progress.style.width = "0%"
+
+            }
+
+            function download(){
+                let download_form = document.getElementById("download_form")
+                let download_button = document.getElementById("download_button")
+
+                download_form.submit()
+                download_button.innerHTML = "File Already Downloaded"
+                download_button.setAttribute("disabled", "true")
+                
+            }
+
+
+            download()
+            
+            run()
+
+
+        </script>
+    </div>
+
+    <footer class="py-4 bg-light text-black-50" style="position: fixed; bottom: 0; width: 100%; height: 10%;">
+        <div class="container text-center">
+           <small><a href="/upload">Home</a> <br> <a href="https://www.youtube.com/channel/UCGHZqwNqihHgYj8rZFcptvQ" target="_blank">&copy; Sanjith Udupa 2020</a></small>
+        </div>
+     </footer>
+    
+</body>
+</html>

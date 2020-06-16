@@ -40,11 +40,13 @@ def convert_to_array(gcode):
             x = float(line[line.index('X') + 1: line.index(' ', line.index('X'))])
             y = float(line[line.index("Y") + 1:])
             full.append([x,y])
+        elif "M00" in line:
+            full.append([500000000,500000000])
     return (full)
 
 @app.route("/")
 def home():
-    return redirect(url_for("upload_image"))
+    return redirect(url_for("about"))
 
 @app.route("/upload", methods=["GET"])
 def upload_image():
@@ -118,7 +120,10 @@ def process_image():
 
             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            createEmbroidery(filename, ext, int(repetitions), fill)
+            # print(createEmbroidery(filename, ext, int(repetitions), fill))
+            embroideryDone = createEmbroidery(filename, ext, int(repetitions), fill)
+
+            print(embroideryDone)
 
             gfile = open("tmp/" + filename + ".gcode")
 
@@ -126,7 +131,7 @@ def process_image():
 
             cleanup(filename)
 
-            return render_template("sim.html", fname=filename, gcode_array=gcodeArray, fext=ext)
+            return render_template("preview.html", fname=filename, gcode_array=gcodeArray, fext=ext, toast_message=embroideryDone)
 
         print('image saved')
         # return redirect(request.url)
@@ -140,6 +145,9 @@ def download_file():
     os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
     return x
 
+@app.route("/about", methods=["GET"])
+def about():
+    return render_template("about.html")
 # @app.route("/sim", methods=["GET"])
 # def sim():
 #     return render_template("sim.html")
@@ -147,4 +155,4 @@ def download_file():
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    app.run(debug = True)
+    app.run(threaded=True, port=5000)

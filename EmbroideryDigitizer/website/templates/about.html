@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>About</title>
+</head>
+<body>
+  
+    <div style="text-align: center;">
+        <br>
+        <h1>Embroidery Digitizer</h1>
+        <br>
+        <hr style="width: 75%; margin: auto;">
+        <br>
+        <img id="rightImg" src="{{ url_for('static', filename='img/EmbroideryExample.png') }}" style="width: 20%; position: absolute; right: 8%; top: 12.5%;">
+        <img id="leftImg"src="{{ url_for('static', filename='img/EmbroideryExample2.png') }}" style="width: 20%; position: absolute; left: 7.5%; top: 11.275%;">
+
+        <h3>Welcome to the online embroidery digitizer!</h3>
+        This is an <a href="https://github.com/sanjithudupa/Embroidery-Digitizer">open source</a> project by <a href="https://www.youtube.com/channel/UCGHZqwNqihHgYj8rZFcptvQ">Sanjith Udupa</a> to help people in all of their embroidery needs.
+        
+        <br>
+        In order to get started digitizing your images for embroidery, <strong>you will need an SVG image.</strong>
+        <br>
+        <br>
+        A common tool for tracing SVG images from raster formats such as PNG or JPEG is <a href="https://www.inkscape.org">Inkscape</a>
+        <br>
+        <br>
+
+        <br>
+
+        <h4>Some notes about your SVG images:</h4>
+    </div>
+
+    <div style="width: 50%; margin: auto;">
+        <ul>
+            <li>Different <strong>path</strong> attributes will be interpreted as different colors</li>
+            <li>You have the option to fill your SVG file, but please note that the fill feature is still being developed</li>
+            <li>If your image has multiple parts(seperated by space) and <strong>only one path,</strong> the fill will not work</li>
+        </ul>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+   
+    <div style="text-align: center;">
+        <a class="btn btn-primary" href="/upload" role="button">Get Started Digitizing!</a>
+        <br>
+        <br>
+
+        <!-- <h4>How this was made:</h4>
+        <strong>I wrote this embroidery digitizer in Python, HTML, CSS, and JavaScript.</strong>
+        <br> -->
+
+    </div>
+
+    <!-- <div style="width: 50%; margin: auto;">
+        <ul>
+            <li>I am running a <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a> web server to display the HTML pages.</li>
+            <li>I wrote the embroidery generation myself in Python using the both the <a href="https://pypi.org/project/svgpathtools/">svgpathtools</a> and <a href="https://pypi.org/project/pyembroidery/">pyembroidery</a> libraries.</li>
+            <li>I made the Embroidery simulation myself in vanilla JavaScript by interpreting gcode and using the HTML canvas element.</li>
+            <li>The "new color" toast in the simulation is made with the JavaScript <a href="https://www.cssscript.com/simple-vanilla-javascript-toast-notification-library-toastify/">Toastify</a> library</li>
+        </ul>
+    </div> -->
+    
+        
+    
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h4 style="text-align: center;">If you have any questions, advice or suggestions, please feel free to contact me on my <a href="https://www.youtube.com/channel/UCGHZqwNqihHgYj8rZFcptvQ">YouTube Channel!</a></h4>
+    </div>
+
+    <script>
+        const minImageWidth = 1380
+        let rightImg = document.getElementById("rightImg")
+        let leftImg = document.getElementById("leftImg")
+
+        checkWidth(window.innerWidth)
+
+        window.onresize = function(event) {
+            // console.log("x: " + window.innerWidth+"      y: " + window.innerHeight);
+            let width = window.innerWidth
+            checkWidth(width)
+        }
+
+        function checkWidth(width){
+            if(width <= minImageWidth){
+                rightImg.style.display = "none"
+                leftImg.style.display = "none"
+            }else{
+                rightImg.style.display = "inline"
+                leftImg.style.display = "inline"
+            }
+        }
+    </script>
+   
+
+    
+    
+</body>
+</html>
