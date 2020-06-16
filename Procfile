@@ -1,1 +1,1 @@
-web: gunicorn -w 4 app_file:app
+web: gunicorn -b :$PORT app:app
