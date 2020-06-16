@@ -1,7 +1,6 @@
 import pyembroidery
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 from xml.dom import minidom
 from svgpathtools import parse_path, Line, Path, wsvg, svg2paths, disvg, CubicBezier
 from svgpathtools.path import scale
