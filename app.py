@@ -144,7 +144,8 @@ def process_image():
 def download_file():
     # print(request.form["file_name"])
     x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file_name"], as_attachment=True)
-    os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
+    # os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
+    print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
     return x
 
 @app.route("/about", methods=["GET"])
