@@ -4,7 +4,7 @@ import numpy as np
 from xml.dom import minidom
 from svgpathtools import parse_path, Line, Path, wsvg, svg2paths, disvg, CubicBezier
 from svgpathtools.path import scale
-import shapely.geometry
+# import shapely.geometry
 # from itertools import compress
 import sys
 
