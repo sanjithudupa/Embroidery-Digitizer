@@ -166,7 +166,7 @@ def createEmbroidery(filename, ext, repetitions, fill):
     return returned
 
 def cleanup(filename):
-    os.remove("tempFolderolder/"+filename+".gcode")
+    os.remove("tempFolder/"+filename+".gcode")
     os.remove("uploads/" + filename)
 
 
