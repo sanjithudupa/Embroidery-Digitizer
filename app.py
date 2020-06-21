@@ -10,7 +10,7 @@ app = Flask(__name__)
 print(os.getcwd())
 
 app.config["IMAGE_UPLOADS"] = "uploads"
-app.config["OUTPUT_FOLDER"] = "outF"
+app.config["OUTPUT_FOLDER"] = "outputFolder"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 

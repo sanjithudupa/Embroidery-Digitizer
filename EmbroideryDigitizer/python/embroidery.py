@@ -155,9 +155,9 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
 def createEmbroidery(filename, ext, repetitions, fill):
     input_file = "uploads/" + filename
 
-    gcode_file = "EmbroideryDigitizer/tempF/"+filename+".gcode"
+    gcode_file = "tempF/"+filename+".gcode"
 
-    output_file = "outF/"+filename+ext
+    output_file = "outputF/"+filename+ext
 
     returned = writeGcode(gcode_file, input_file, repetitions, fill)
 
@@ -166,7 +166,7 @@ def createEmbroidery(filename, ext, repetitions, fill):
     return returned
 
 def cleanup(filename):
-    os.remove("EmbroideryDigitizer/tempF/"+filename+".gcode")
+    os.remove("tempF/"+filename+".gcode")
     os.remove("uploads/" + filename)
 
 
@@ -322,7 +322,7 @@ buggy but works for all inputs
 #     return lst[min(range(len(lst)), key = lambda i: abs(lst[i]-K))] 
       
 
-# v = writeGcode("EmbroideryDigitizer/tempF/disvg_output.svg.gcode","uploads/disvg_output.svg")
+# v = writeGcode("tempF/disvg_output.svg.gcode","uploads/disvg_output.svg")
 
 # x, y = zip(*v)
 
