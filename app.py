@@ -157,5 +157,4 @@ def about():
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    print(app.root_path)
     app.run()
