@@ -127,7 +127,7 @@ def process_image():
 
             print(embroideryDone)
 
-            gfile = open("EmbroideryDigitizer/tempFolder/" + filename + ".gcode")
+            gfile = open("tempFolder/" + filename + ".gcode")
 
             gcodeArray = convert_to_array(gfile.read())
 
