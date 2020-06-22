@@ -147,7 +147,7 @@ def download_file():
     # os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
     print(app.config["OUTPUT_FOLDER"])
     print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
-    return x
+    return render_template("about.html")
 
 @app.route("/about", methods=["GET"])
 def about():
