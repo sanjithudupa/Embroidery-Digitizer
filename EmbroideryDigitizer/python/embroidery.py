@@ -163,6 +163,9 @@ def createEmbroidery(filename, ext, repetitions, fill):
 
     pyembroidery.convert(gcode_file, output_file)
 
+    print(os.system("ls outputF"))
+
+
     return returned
 
 def cleanup(filename):
