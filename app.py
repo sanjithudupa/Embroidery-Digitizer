@@ -146,7 +146,7 @@ def download_file():
     # x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file_name"], as_attachment=True)
     # # os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
     # print(app.config["OUTPUT_FOLDER"])
-    print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
+    # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
     print('/download')
     return render_template("about.html")
 
