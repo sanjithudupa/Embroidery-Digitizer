@@ -157,13 +157,13 @@ def createEmbroidery(filename, ext, repetitions, fill):
 
     gcode_file = "tempFolder/"+filename+".gcode"
 
-    output_file = "outputF/"+filename+ext
+    output_file = "outputFolder/"+filename+ext
 
     returned = writeGcode(gcode_file, input_file, repetitions, fill)
 
     pyembroidery.convert(gcode_file, output_file)
 
-    print(os.system("ls outputF"))
+    print(os.system("ls"))
 
 
     return returned
