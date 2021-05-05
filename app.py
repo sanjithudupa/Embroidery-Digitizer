@@ -1,13 +1,11 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, make_response, jsonify
 from werkzeug.utils import secure_filename
 import sys
 sys.path.append(os.getcwd() + "/EmbroideryDigitizer/python/")
-from embroidery import createEmbroidery, cleanup
+from embroidery import createEmbroidery, cleanup # type: ignore
 
 app = Flask(__name__)
-
-print(os.getcwd())
 
 app.config["IMAGE_UPLOADS"] = "uploads"
 app.config["OUTPUT_FOLDER"] = "outputFolder"
@@ -82,7 +80,6 @@ def upload_image():
 
 @app.route("/preview", methods=["POST"])
 def process_image():
-
     if request.files:
         
         ext = request.form["extension"]
@@ -156,6 +153,54 @@ def about():
 # @app.route("/sim", methods=["GET"])
 # def sim():
 #     return render_template("sim.html")
+
+@app.route("/api/upload", methods=["POST"])
+def upload():
+    if request.files:
+        ext = request.form["extension"]
+        fillcheck = request.form.get("fill")
+
+        fill = fillcheck == "on"
+        image = request.files["image"]
+
+        if not allowed_file_size(image):
+            return make_response(
+                "Error: Filesize too large",
+                400
+            )
+
+        if image.filename == "":
+            return make_response(
+                "Error: Image must have a filename",
+                400
+            )
+
+        if not allowed_image(image.filename):
+            return make_response(
+                "Error: Uploading image",
+                400
+            )
+        else:
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+
+            embroideryDone = createEmbroidery(filename, ext, 12, fill)
+            gfile = open("tempFolder/" + filename + ".gcode")
+            gcodeArray = convert_to_array(gfile.read())
+
+            cleanup(filename)
+            resp = {
+                "file": filename + ext,
+                "gcode": gcodeArray,
+                "toast": embroideryDone
+            }
+
+            return jsonify(resp)
+
+    return make_response(
+        "Error: Upload Failed",
+        400
+    )
 
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")

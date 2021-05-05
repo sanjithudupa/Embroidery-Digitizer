@@ -77,7 +77,7 @@ def toolPathSVG(svgPath, repetitions):
 
     # shownPath = paths + offset_paths
     shownPath = allPaths
-    
+
     wsvg(shownPath, filename=svgPath)
     return attrs
 
@@ -189,8 +189,6 @@ def createEmbroidery(filename, ext, repetitions, fill):
     returned = writeGcode(gcode_file, input_file, repetitions, fill)
 
     pyembroidery.convert(gcode_file, output_file)
-
-    print(os.system("ls"))
 
 
     return returned
