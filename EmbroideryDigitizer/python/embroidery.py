@@ -46,19 +46,40 @@ def toolPathSVG(svgPath, repetitions):
             mult = 2
         offset_distances.append(-mult * k)
     # offset_distances = [-3*k for k in range(1, 1 + repetitions,2)]
-    offset_paths = []
+    attrs = []
+    allPaths = []
 
+    idx = 0
     for path in paths:
+        offset_paths = []
+        idx+=1
+
         for distances in offset_distances:
             newcurve = offset_curve(path, distances)
+            # _, attributes = newcurve.
             # if newcurve.length() < 230 : 
             #     break
+
+            # newcurve = parse_path(newcurve.d())
+            # print(type(newcurve))
+
+            if newcurve.area() < path.area()/50:
+                # attrs.append(idx)
+                break
+            
             offset_paths.append(newcurve)
 
-    shownPath = paths + offset_paths
+            idx += 1
+        allPaths.append(path)
+        for of in offset_paths:
+            allPaths.append(of)
+        attrs.append(idx-1)
 
+    # shownPath = paths + offset_paths
+    shownPath = allPaths
+    
     wsvg(shownPath, filename=svgPath)
-
+    return attrs
 
 
 
@@ -101,18 +122,22 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
     gcodeString = ""
 
     returnString = ""
+    skip_paths = []
 
     if fill:
-        try:
-            toolPathSVG(svg_path, repetitions)
-        except:
-            returnString = "Couldn't fill svg. Try breaking it into multiple paths."
+        # try:
+        skip_paths = toolPathSVG(svg_path, repetitions)
+        # except:
+            # returnString = "Couldn't fill svg. Try breaking it into multiple paths."
             # print(returnString)
     # print(returnString)
 
     doc = minidom.parse(svg_path)
     path_strings = [path.getAttribute('d') for path
                     in doc.getElementsByTagName('path')]
+    
+    print(skip_paths)
+
     doc.unlink()
 
     # try :
@@ -128,6 +153,7 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
     vertices = []
 
     # print the line draw commands
+    idx = 0
     for path_string in path_strings:
         p = parse_path(path_string)
         for i in range(0,int(p.length()),2):
@@ -138,8 +164,9 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
             v = (x,y)
             vertices.append(v)
             gcodeString += ("G00 X" + str(x) + " Y" + str(y)) + "\n"
-        if(len(path_strings) > 1):
+        if(len(path_strings) > 1 and idx in skip_paths):
             gcodeString += "M00\n"
+        idx += 1
 
 
     gcodeString += "\nM30"
