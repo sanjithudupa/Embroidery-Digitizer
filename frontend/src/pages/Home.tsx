@@ -1,7 +1,7 @@
 import React from "react";
 
 import Button from "react-bootstrap/Button";
-import Jumbotron from "react-bootstrap/Jumbotron";
+import Footer from "../components/Footer";
 
 import ParticleBG from "particles-bg"
 
@@ -21,6 +21,8 @@ const Home: React.FC = () => {
                 <br></br>
                 <Button color="#A23B72">Get Started</Button>
             </div>
+
+            <Footer />
         </div>
     )
 }
