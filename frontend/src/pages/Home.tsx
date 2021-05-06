@@ -4,8 +4,12 @@ import Button from "react-bootstrap/Button";
 import Footer from "../components/Footer";
 
 import ParticleBG from "particles-bg"
+import { useHistory } from "react-router";
 
 const Home: React.FC = () => {
+
+    const history = useHistory();
+    
     return (
         <div>
             <ParticleBG type="cobweb" bg={true} color="#A23B72" /> 
@@ -19,7 +23,7 @@ const Home: React.FC = () => {
                 <i>Ready to start making great designs?</i>
                 <br/>
                 <br></br>
-                <Button color="#A23B72">Get Started</Button>
+                <Button color="#A23B72" onClick={() => history.push("/upload")}>Get Started</Button>
             </div>
 
             <Footer />

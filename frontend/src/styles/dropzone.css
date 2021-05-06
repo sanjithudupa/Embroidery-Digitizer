@@ -1,0 +1,28 @@
+#file-drop-div {
+    border-color: #6c757d; 
+    margin: 0 auto; 
+    border-style: dashed; 
+    border-radius: 5px; 
+    width: 50%; 
+    height:200px
+}
+#image {
+    opacity: 0; 
+    z-index: 2; 
+    position: absolute; 
+    width: 50%; 
+    height:200px; 
+    border-radius: 5px; 
+    text-align: center;
+}
+#svg-container {
+    display: flex; 
+    align-items: center; 
+    height: 100%;
+}
+#upload-icon {
+    display: block; 
+    margin: auto; 
+    margin-top:40px;
+}
+      
