@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Dropzone from "../components/Dropzone";
 import Footer from "../components/Footer";
@@ -18,6 +18,12 @@ const Upload: React.FC = () => {
 
     const [dropdown, setDropdown] = useState("Output File Type");
     const [value, setValue] = useState("Yes");
+
+    const [pressed, setPressed] = useState(false);
+
+    const sendFile = () => {
+        setPressed(true);
+    }
 
     return (
         <div style={{height: "100%", overflow: "hidden"}}>
@@ -84,13 +90,22 @@ const Upload: React.FC = () => {
                 <br />
                 <br />
 
-                <Button variant="success">
-                    Digitize!
+                <Button variant="success" onClick={() => sendFile()} disabled={pressed}>
+                    { pressed ?
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                        /> :
+                        <span>Digitize!</span>
+                    }
                 </Button>
 
                 <br />
 
-                h 
+                
                 
 
             </div>
