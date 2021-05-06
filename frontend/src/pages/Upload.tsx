@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Button, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { Button, Collapse, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Dropzone from "../components/Dropzone";
 import Footer from "../components/Footer";
+
+import $ from "jquery";
 
 const Upload: React.FC = () => {
 
@@ -16,8 +18,10 @@ const Upload: React.FC = () => {
         "U01"
     ]
 
+    const [dropzoneSet, setDropzoneSet] = useState(false);
+
     const [dropdown, setDropdown] = useState("Output File Type");
-    const [value, setValue] = useState("Yes");
+    const [value, setValue] = useState("");
 
     const [pressed, setPressed] = useState(false);
 
@@ -35,83 +39,99 @@ const Upload: React.FC = () => {
                 <h6>First, <strong>upload</strong> an SVG image file.</h6>
                 <br />
 
-                <Dropzone />
+                <Dropzone setFile={() => setDropzoneSet(true)} />
 
                 <br />
 
-                <h6>Now, choose your <strong>output file type.</strong></h6>
-                <a href="#">Not sure which type to choose?</a>
+                <Collapse in={dropzoneSet}>
+                    <div>
+                        <h6>Now, choose your <strong>output file type.</strong></h6>
+                        <a href="#">Not sure which type to choose?</a>
 
-                <br />
-                <br />
+                        <br />
+                        <br />
 
-                <Dropdown>
-                    <Dropdown.Toggle variant="info">
-                        {dropdown}
-                    </Dropdown.Toggle>
+                        <Dropdown>
+                            <Dropdown.Toggle variant="info">
+                                {dropdown}
+                            </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        {
-                            extensions.map((extension) => {
-                                return <Dropdown.Item onClick={() => setDropdown(extension)}>{extension}</Dropdown.Item>
-                            })
-                        }
-                    </Dropdown.Menu>
+                            <Dropdown.Menu>
+                                {
+                                    extensions.map((extension) => {
+                                        return <Dropdown.Item onClick={() => setDropdown(extension)}>{extension}</Dropdown.Item>
+                                    })
+                                }
+                            </Dropdown.Menu>
 
-                </Dropdown>
+                        </Dropdown>
 
-                <br />
-                <br />
+                        <br />
+                        <br />
+                    </div>
+                </Collapse>
 
-                Great, would you like your file to be <strong>filled?</strong>
-                <br />
-                <a href="#">Show me what this means.</a>
+                <Collapse in={dropdown != "Output File Type"}>
+                    <div>
+                        Great, would you like your file to be <strong>filled?</strong>
+                        <br />
+                        <a href="#">Show me what this means.</a>
 
-                <br />
-                <br />
+                        <br />
+                        <br />
 
-                <ToggleButtonGroup
-                    name="value"
-                    type="radio"
-                    value={value}
-                    onChange={(value) => setValue(value)}
-                >
-                    <ToggleButton value={"Yes"} variant="secondary">Yes</ToggleButton>
-                    <ToggleButton value={"No"} variant="secondary">No</ToggleButton>
-                </ToggleButtonGroup>
+                        <ToggleButtonGroup
+                            name="value"
+                            type="radio"
+                            value={value}
+                            onChange={(value) => {
+                                setValue(value);
+                                setTimeout(() => {
+                                    $([document.documentElement, document.body]).animate({
+                                        scrollTop: $("#sendButton").offset()!.top
+                                    }, 1000);
+                                }, 50);
+                            }}
+                        >
+                            <ToggleButton value={"Yes"} variant="secondary">Yes</ToggleButton>
+                            <ToggleButton value={"No"} variant="secondary">No</ToggleButton>
+                        </ToggleButtonGroup>
 
-                <br />
-                <br />
+                        <br />
+                        <br />
+                    </div>
+                </Collapse>
 
-                Now, start the digitzation process!
-                <br />
-                <i>This may take up to two minutes</i>
+                <Collapse in={value == "Yes" || value == "No"}>
+                    <div>
+                        Now, start the digitzation process!
+                        <br />
+                        <i>This may take up to two minutes</i>
 
-                <br />
-                <br />
+                        <br />
+                        <br />
 
-                <Button variant="success" onClick={() => sendFile()} disabled={pressed}>
-                    { pressed ?
-                        <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                        /> :
-                        <span>Digitize!</span>
-                    }
-                </Button>
+                        <Button id="sendButton" variant="success" onClick={() => sendFile()} disabled={pressed}>
+                            { pressed ?
+                                <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                /> :
+                                <span>Digitize!</span>
+                            }
+                        </Button>
 
-                <br />
-
-                
-                
+                        <br />
+                    </div>
+                </Collapse>           
 
             </div>
             <br />
             <br />
-            <Footer sticky />
+            <Footer sticky={dropdown != "Output File Type"} />
         </div>
     )
 }

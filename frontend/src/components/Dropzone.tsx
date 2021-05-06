@@ -48,7 +48,8 @@ const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
 
         reader.onload = (event) => {
             const result = event.target!.result;
-            console.log(result)
+            if(setFile)
+                setFile()
             setReading(false);
         };
 
