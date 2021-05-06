@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Collapse, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Dropzone from "../components/Dropzone";
 import Footer from "../components/Footer";
 
 import $ from "jquery";
+import { API_ENDPOINT } from "../constants";
 
-const Upload: React.FC = () => {
+const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
     const extensions = [
         "PES",
@@ -27,6 +28,22 @@ const Upload: React.FC = () => {
 
     const sendFile = () => {
         setPressed(true);
+
+        const fileInput = document.getElementById("image") as HTMLInputElement;
+
+        const data = new FormData();
+        data.append("image", fileInput.files![0]);
+        data.append("extension", `.${dropdown.toLowerCase()}`);
+        data.append("fill", (value == "Yes").toString());
+
+        fetch(API_ENDPOINT + "/digitize", {
+            method: "POST",
+            body: data
+        }).then((response) => {
+            response.json().then((body) => {
+                setEmb(body);
+            });
+        });
     }
 
     return (

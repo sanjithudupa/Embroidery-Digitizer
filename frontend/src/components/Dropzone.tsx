@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
+
+import { API_ENDPOINT } from "../constants";
+
 import "../styles/dropzone.css";
 
 const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
@@ -62,7 +65,7 @@ const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
     }
 
     return (
-        <form id="dropzone_form" action="/preview" method = "POST" encType="multipart/form-data">
+        <form id="dropzone_form" action={`${API_ENDPOINT}/upload`} method = "POST" encType="multipart/form-data">
             <div id="file-drop-div" onDragEnter={fileDragged} onClick={fileDragged} onMouseUp={fileNotDragged} onDragLeave={fileNotDragged}>
                 <input onChange={fileAdded} type="file" name="image" accept=".svg" id="image" />
                 
@@ -75,7 +78,6 @@ const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
                 
                 <div id="help-label-container" style={{textAlign: "center", marginTop: `-${reading ? 80 : 50}px`, paddingBottom: "px"}}>
                     <label id="upload-help-label"><strong>Click to select or drag an image...</strong> <br /> <strong style={{color: "#A23B72"}}>{filename}</strong> </label>
-
                     {
                         reading ?
                         <ProgressBar now={readingProgress} style={{ width: "75%", justifySelf: "center", margin: "auto", height: "10px"}} />
@@ -84,8 +86,8 @@ const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
                 </div>
             </div>
 
-            <input type="text" hidden name="extension" />
-            <input type="checkbox" hidden name="fill" />
+            <input id="ext_input" type="text" hidden name="extension" />
+            <input id="fill_input" type="checkbox" hidden name="fill" />
         </form>
     )
 }

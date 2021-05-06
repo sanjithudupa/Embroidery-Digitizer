@@ -1,16 +1,19 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, make_response, jsonify
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import sys
 sys.path.append(os.getcwd() + "/EmbroideryDigitizer/python/")
 from embroidery import createEmbroidery, cleanup # type: ignore
 
 app = Flask(__name__)
+cors = CORS(app)
 
 app.config["IMAGE_UPLOADS"] = "uploads"
 app.config["OUTPUT_FOLDER"] = "outputFolder"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 result = ""
 
@@ -154,7 +157,8 @@ def about():
 # def sim():
 #     return render_template("sim.html")
 
-@app.route("/api/upload", methods=["POST"])
+@app.route("/api/digitize", methods=["POST"])
+@cross_origin()
 def upload():
     if request.files:
         ext = request.form["extension"]

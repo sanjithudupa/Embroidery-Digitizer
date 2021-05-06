@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Redirect, Route, useLocation } from "react-router-dom";
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import CSSTranstion from "react-transition-group/CSSTransition";
@@ -11,7 +11,8 @@ import "./styles/transition.css";
 import Switch from 'react-bootstrap/esm/Switch';
 
 const App: React.FC = () => {
-  // const location = useLocation();
+
+  const [emb, setEmb] = useState({});
  
   return (
     // <ScrollReveal ref={childRef}
@@ -26,7 +27,9 @@ const App: React.FC = () => {
         <Router>
           <div className="Router">
             <Route path="/" exact component={Home} />
-            <Route path="/upload" exact component={Upload} />
+            <Route path="/upload" exact >
+              <Upload setEmb={setEmb} />
+            </Route>
           </div>
         </Router>
         //   </CSSTranstion>
