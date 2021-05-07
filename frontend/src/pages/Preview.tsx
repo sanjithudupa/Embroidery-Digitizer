@@ -113,7 +113,6 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
         const data = new FormData();
         data.set("uid", embResult.uid);
-        data.set("file", embResult.file);
 
         fetch(API_ENDPOINT + "/download", {
             method: "POST",
@@ -150,7 +149,7 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
             download();
             run();
         } else {
-            history.push("/")
+            history.push("/");
         }
     }, []);
 
@@ -176,7 +175,7 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
                     <div id="run_button_holder">
                         <br style={{margin: "10px"}} />
-                        <button className="btn btn-outline-success" onClick={run} id="run_button">Animate <strong>{embResult.gcode.length}</strong> stitches</button>
+                        <button className="btn btn-success" onClick={run} id="run_button">Animate <strong>{embResult.gcode.length}</strong> stitches</button>
                     </div>
 
                     <hr style={{width: "75%"}} />

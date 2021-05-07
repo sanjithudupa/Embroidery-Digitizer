@@ -19,6 +19,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 result = ""
 
+file_ids = {}
+
 def allowed_image(filename):
     if not "." in filename:
         return False
@@ -196,6 +198,8 @@ def upload():
 
             uid = str(uuid.uuid4())
 
+            file_ids[uid] = [filename, ext]
+
             resp = {
                 "file": filename + ext,
                 "gcode": gcodeArray,
@@ -211,11 +215,22 @@ def upload():
     )
 @app.route("/api/download", methods=["POST"])
 def download_api():
-    x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file"], as_attachment=True)
-    os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file"])
+    if not file_ids[request.form["uid"]]:
+        return make_response(
+            "Error: File Not Found",
+            400
+        )
 
-    fname = request.form["file"]
-    gcode = fname[:fname.index(".svg")] + ".svg.gcode"
+    fname = file_ids[request.form["uid"]][0]
+    ext = file_ids[request.form["uid"]][1]
+    
+    print("removing " + fname)
+
+    x = send_from_directory(app.config["OUTPUT_FOLDER"], fname + ext, as_attachment=True)
+    os.remove(app.config["OUTPUT_FOLDER"] + "/" + fname + ext)
+    os.remove(app.config["IMAGE_UPLOADS"] + "/" + fname)
+
+    gcode = fname + ".gcode"
 
     os.remove(app.config["TEMP_FOLDER"] + "/" + gcode)
 
