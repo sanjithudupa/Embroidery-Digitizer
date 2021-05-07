@@ -12,6 +12,7 @@ cors = CORS(app)
 
 app.config["IMAGE_UPLOADS"] = "uploads"
 app.config["OUTPUT_FOLDER"] = "outputFolder"
+app.config["TEMP_FOLDER"] = "tempFolder"
 app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -212,6 +213,11 @@ def upload():
 def download_api():
     x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file"], as_attachment=True)
     os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file"])
+
+    fname = request.form["file"]
+    gcode = fname[:fname.index(".svg")] + ".svg.gcode"
+
+    os.remove(app.config["TEMP_FOLDER"] + "/" + gcode)
 
     # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
     # print('/download')
