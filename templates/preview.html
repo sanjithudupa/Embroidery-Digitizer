@@ -147,12 +147,12 @@
             }
 
             function download(){
-                let download_form = document.getElementById("download_form")
-                let download_button = document.getElementById("download_button")
+                let download_form = document.getelementbyid("download_form")
+                let download_button = document.getelementbyid("download_button")
 
                 download_form.submit()
-                download_button.innerHTML = "File Already Downloaded"
-                download_button.setAttribute("disabled", "true")
+                download_button.innerhtml = "file already downloaded"
+                download_button.setattribute("disabled", "true")
                 
             }
 

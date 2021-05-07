@@ -9,10 +9,13 @@ import Unknown from "./pages/Unknown";
 
 import "./styles/transition.css";
 import Switch from 'react-bootstrap/esm/Switch';
+import Preview from './pages/Preview';
+
+const resp = require("./resp.json")
 
 const App: React.FC = () => {
 
-  const [emb, setEmb] = useState({});
+  const [emb, setEmb] = useState(resp);
  
   return (
     // <ScrollReveal ref={childRef}
@@ -29,6 +32,9 @@ const App: React.FC = () => {
             <Route path="/" exact component={Home} />
             <Route path="/upload" exact >
               <Upload setEmb={setEmb} />
+            </Route>
+            <Route path="/preview" exact>
+              <Preview embResult={emb} />
             </Route>
           </div>
         </Router>

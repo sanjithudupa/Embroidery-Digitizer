@@ -164,7 +164,7 @@ def upload():
         ext = request.form["extension"]
         fillcheck = request.form.get("fill")
 
-        fill = fillcheck == "on"
+        fill = fillcheck == "true"
         image = request.files["image"]
 
         if not allowed_file_size(image):

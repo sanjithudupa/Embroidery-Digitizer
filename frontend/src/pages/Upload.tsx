@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 
 import $ from "jquery";
 import { API_ENDPOINT } from "../constants";
+import { useHistory } from "react-router";
 
 const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
@@ -26,6 +27,8 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
     const [pressed, setPressed] = useState(false);
 
+    const history = useHistory();
+
     const sendFile = () => {
         setPressed(true);
 
@@ -36,12 +39,15 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
         data.append("extension", `.${dropdown.toLowerCase()}`);
         data.append("fill", (value == "Yes").toString());
 
+        console.log((value == "Yes"))
+
         fetch(API_ENDPOINT + "/digitize", {
             method: "POST",
             body: data
         }).then((response) => {
             response.json().then((body) => {
                 setEmb(body);
+                history.push("/preview");
             });
         });
     }
