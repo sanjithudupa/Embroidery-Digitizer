@@ -164,8 +164,9 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
             v = (x,y)
             vertices.append(v)
             gcodeString += ("G00 X" + str(x) + " Y" + str(y)) + "\n"
-        if(len(path_strings) > 1 and idx in skip_paths):
-            gcodeString += "M00\n"
+        if len(path_strings) > 1:
+            if (fill and idx in skip_paths) or not fill:
+                gcodeString += "M00\n"
         idx += 1
 
 

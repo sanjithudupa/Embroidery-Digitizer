@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Collapse from "react-bootstrap/esm/Collapse";
+import { Redirect } from "react-router";
+import { useHistory } from "react-router-dom";
 import Footer from "../components/Footer";
 import { API_ENDPOINT } from "../constants";
 
@@ -15,6 +17,8 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
     const [animating, setAnimating] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState("Download Embroidery File")
+
+    const history = useHistory();
 
     function randomColor(){
         const randomColor = Math.floor(Math.random()*16777215).toString(16);
@@ -139,42 +143,56 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
     }
     
     useEffect(() => {
-        if(embResult.toast)
-            showToast();
+        if(embResult) {
+            if(embResult.toast)
+                showToast();
+    
+            download();
+            run();
+        } else {
+            history.push("/")
+        }
     }, []);
 
     return (
-        <div style={{textAlign: "center"}}>
-            <h1>Digitization Complete</h1>
-            <canvas id="sim_canvas" width="500%" height="500%" style={{border: "1px solid #d3d3d3"}}>
-                Sorry, your browser doesn't support the embroidery simulation.
-            </canvas>
+        <>
+            {
+                embResult.gcode ?
+                <div style={{textAlign: "center"}}>
+                    <h1>Digitization Complete</h1>
+                    <canvas id="sim_canvas" width="500%" height="500%" style={{border: "1px solid #d3d3d3", borderRadius: "10px"}}>
+                        Sorry, your browser doesn't support the embroidery simulation.
+                    </canvas>
 
-            <br />
+                    <br />
 
-            <Collapse in={animating}>
-                <div id="progress_bar">
-                    <div className="progress" style={{width: "35%", margin: "auto", height: "12px"}}>
-                        <div id="sim_progress" style={{width: "0%"}} className="progress-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100}></div>
+                    <Collapse in={animating}>
+                        <div id="progress_bar">
+                            <div className="progress" style={{width: "35%", margin: "auto", height: "12px"}}>
+                                <div id="sim_progress" style={{width: "0%"}} className="progress-bar" role="progressbar" aria-valuemin={0} aria-valuemax={100}></div>
+                            </div>
+                        </div>
+                    </Collapse>
+
+                    <div id="run_button_holder">
+                        <br style={{margin: "10px"}} />
+                        <button className="btn btn-outline-success" onClick={run} id="run_button">Animate <strong>{embResult.gcode.length}</strong> stitches</button>
                     </div>
+
+                    <hr style={{width: "75%"}} />
+
+                    <Button onClick={download} variant="outline-info" disabled={downloadStatus == "File Already Downloaded"}>
+                        {downloadStatus}
+                    </Button>
+
+                    <Footer />
+
+                    <div id="snackbar">{embResult.toast}</div>
                 </div>
-            </Collapse>
 
-            <div id="run_button_holder">
-                <br style={{margin: "10px"}} />
-                <button className="btn btn-outline-success" onClick={run} id="run_button">Animate <strong>{embResult.gcode.length}</strong> stitches</button>
-            </div>
-
-            <hr style={{width: "75%"}} />
-
-            <Button onClick={download} variant="outline-info" disabled={downloadStatus == "File Already Downloaded"}>
-                {downloadStatus}
-            </Button>
-
-            <Footer />
-
-            <div id="snackbar">{embResult.toast}</div>
-        </div>
+                : <Redirect to="/" />
+            }
+        </>
     )
 }
 

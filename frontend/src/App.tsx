@@ -15,7 +15,7 @@ const resp = require("./resp.json")
 
 const App: React.FC = () => {
 
-  const [emb, setEmb] = useState(resp);
+  const [emb, setEmb] = useState({});
  
   return (
     // <ScrollReveal ref={childRef}
