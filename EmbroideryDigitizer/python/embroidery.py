@@ -125,11 +125,11 @@ def writeGcode(gcode_file, svg_path, repetitions, fill):
     skip_paths = []
 
     if fill:
-        # try:
-        skip_paths = toolPathSVG(svg_path, repetitions)
-        # except:
-            # returnString = "Couldn't fill svg. Try breaking it into multiple paths."
-            # print(returnString)
+        try:
+            skip_paths = toolPathSVG(svg_path, repetitions)
+        except:
+            returnString = "Couldn't fill svg. Try breaking it into multiple paths."
+            print(returnString)
     # print(returnString)
 
     doc = minidom.parse(svg_path)

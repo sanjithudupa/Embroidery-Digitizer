@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 import sys
 sys.path.append(os.getcwd() + "/EmbroideryDigitizer/python/")
 from embroidery import createEmbroidery, cleanup # type: ignore
+import uuid
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -192,10 +193,12 @@ def upload():
             gfile = open("tempFolder/" + filename + ".gcode")
             gcodeArray = convert_to_array(gfile.read())
 
-            cleanup(filename)
+            uid = str(uuid.uuid4())
+
             resp = {
                 "file": filename + ext,
                 "gcode": gcodeArray,
+                "uid": uid,
                 "toast": embroideryDone
             }
 
@@ -205,7 +208,15 @@ def upload():
         "Error: Upload Failed",
         400
     )
+@app.route("/api/download", methods=["POST"])
+def download_api():
+    x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file"], as_attachment=True)
+    os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file"])
 
+    # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
+    # print('/download')
+    
+    return x
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)

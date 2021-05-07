@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Collapse from "react-bootstrap/esm/Collapse";
 import Footer from "../components/Footer";
+import { API_ENDPOINT } from "../constants";
 
 import "../styles/toast.css";
 import "../styles/toastify.css";
@@ -102,6 +103,40 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
         progress.style.width = "0%"
         setAnimating(false);
     }
+
+    const download = () => {
+        setDownloadStatus("File Already Downloaded");
+
+        const data = new FormData();
+        data.set("uid", embResult.uid);
+        data.set("file", embResult.file);
+
+        fetch(API_ENDPOINT + "/download", {
+            method: "POST",
+            body: data
+        }).then((response) => {
+            response.blob().then((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = embResult.file;
+                a.id = "DOWNLOAD_LINK";
+                a.style.display = "none";
+
+                const clickHandler = () => {
+                    setTimeout(() => {
+                        URL.revokeObjectURL(url);
+                        a.removeEventListener('click', clickHandler)
+                        // document.removeChild(document.getElementById(a.id)!);
+                    }, 100);
+                }
+
+                a.addEventListener("click", clickHandler, false);
+                document.body.appendChild(a);
+                a.click();
+            });
+        })
+    }
     
     useEffect(() => {
         if(embResult.toast)
@@ -132,7 +167,7 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
             <hr style={{width: "75%"}} />
 
-            <Button variant="outline-info" disabled={downloadStatus == "File Already Downloaded"}>
+            <Button onClick={download} variant="outline-info" disabled={downloadStatus == "File Already Downloaded"}>
                 {downloadStatus}
             </Button>
 
