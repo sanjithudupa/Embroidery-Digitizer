@@ -27,7 +27,10 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
     function sleep(ms: number) { return new Promise(resolve => setTimeout(resolve, ms));}
     
-    function showToast() {
+    function showToast(msg?: string) {
+        if(msg)
+            embResult.toast = msg;
+        
         if(toast_message != ""){
             let x = document.getElementById("snackbar")!;
             x.className = "show";
@@ -44,9 +47,11 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
         setAnimating(true)
         
-        run_button.disabled = true;
-        progress_bar.style.display = "block";
-        progress.style.width = "0%"
+        if(run_button) {
+            run_button.disabled = true;
+            progress_bar.style.display = "block";
+            progress.style.width = "0%"
+        }
 
         var canvas = document.getElementById("sim_canvas") as HTMLCanvasElement;
         var ctx = canvas.getContext("2d")!;
@@ -60,52 +65,75 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
 
         ctx.clearRect(0, 0, width, height);
         
-        ctx.moveTo(points[0][0] * multiply ,points[0][1] * multiply);
-        ctx.strokeStyle = randomColor()
-        ctx.beginPath();
-        
-        for (let i = 1; i < total - 1; i++) {
-            let x = points[i][0] * multiply;
-            let y = points[i][1] * multiply;
+        try {
+
+            let max_x = -Infinity;
+            let max_y = -Infinity;
+            let min_x = Infinity;
+            let min_y = Infinity;
+
+            points.forEach((point: number[]) => {
+                max_x = Math.max(point[0], max_x);
+                max_y = Math.max(point[1], max_y);
+                min_x = Math.min(point[0], min_x);
+                min_y = Math.min(point[1], min_y);
+            });
+
+            let x_ratio = width/max_x;
+            let y_ratio = height/max_y;
             
-            if(x == multiply*M_amount && y == multiply*M_amount){
-                ctx.closePath();
-                ctx.moveTo(points[i+1][0] * multiply, points[i+1][1] * multiply)
-                let newColor = randomColor()
-                let toastify = (window as any).Toastify({
-                    text: "Started a new path with color: " + newColor,
-                    duration: 2000,
-                    backgroundColor: newColor,
-                    position: 'right'
-                }).showToast();
-                ctx.strokeStyle = newColor
-                ctx.beginPath();
-            }else{
-                ctx.lineTo(x,y);
 
-                ctx.stroke();
-
-                let percent = (100 * (i/total))
-                if(percent >= showPercent){
-                    progress.innerHTML = i.toString() + " stitches"
+            ctx.moveTo(points[0][0] * multiply * Math.min(x_ratio, y_ratio), points[0][1] * multiply * Math.min(x_ratio, y_ratio));
+            ctx.strokeStyle = randomColor()
+            ctx.beginPath();
+            for (let i = 1; i < total - 1; i++) {
+                let x = points[i][0] * multiply;
+                let y = points[i][1] * multiply;
+                
+                if(x == multiply*M_amount && y == multiply*M_amount){
+                    ctx.closePath();
+                    ctx.moveTo(points[i+1][0] * multiply, points[i+1][1] * multiply)
+                    let newColor = randomColor()
+                    let toastify = (window as any).Toastify({
+                        text: "Started a new path with color: " + newColor,
+                        duration: 2000,
+                        backgroundColor: newColor,
+                        position: 'right'
+                    }).showToast();
+                    ctx.strokeStyle = newColor
+                    ctx.beginPath();
                 }else{
-                    progress.innerHTML = ""
+                    ctx.lineTo(x,y);
+    
+                    ctx.stroke();
+    
+                    let percent = (100 * (i/total))
+                    if(percent >= showPercent){
+                        progress.innerHTML = i.toString() + " stitches"
+                    }else{
+                        progress.innerHTML = ""
+                    }
+                    progress.style.width = percent.toString() + "%"
                 }
-                progress.style.width = percent.toString() + "%"
+    
+               
+    
+                await sleep(20);
             }
-
-           
-
-            await sleep(20);
+            
+            await sleep(1000);
+    
+            run_button.disabled = false;
+            progress_bar.style.display = "none";
+    
+            progress.style.width = "0%"
+            setAnimating(false);
+        } catch (e) {
+            embResult.toast = `Sorry, an Error Occurred in the Preview. ${e}`
+            alert(e)
+            showToast()
+            setAnimating(false);
         }
-        
-        await sleep(1000);
-
-        run_button.disabled = false;
-        progress_bar.style.display = "none";
-
-        progress.style.width = "0%"
-        setAnimating(false);
     }
 
     const download = () => {
@@ -118,6 +146,12 @@ const Preview: React.FC<{embResult: any}> = ({embResult}) => {
             method: "POST",
             body: data
         }).then((response) => {
+            if(response.status == 400){
+                showToast("File not found.. redirecting in 5 seconds.")
+                return setTimeout(() => {
+                    history.push("/")
+                }, 5000)
+            }
             response.blob().then((blob) => {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");

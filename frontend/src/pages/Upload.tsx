@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Collapse, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { Button, Collapse, Modal, Spinner, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import Dropzone from "../components/Dropzone";
 import Footer from "../components/Footer";
@@ -7,6 +7,9 @@ import Footer from "../components/Footer";
 import $ from "jquery";
 import { API_ENDPOINT } from "../constants";
 import { useHistory } from "react-router";
+
+import FilledImage from "../assets/images/FilledExample.png";
+import UnfilledImage from "../assets/images/UnfilledExample.png";
 
 const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
@@ -24,6 +27,8 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
     const [dropdown, setDropdown] = useState("Output File Type");
     const [value, setValue] = useState("");
+    const [popup, setPopup] = useState(true);
+    const [popupType, setPopupType] = useState(true);
 
     const [pressed, setPressed] = useState(false);
 
@@ -38,8 +43,6 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
         data.append("image", fileInput.files![0]);
         data.append("extension", `.${dropdown.toLowerCase()}`);
         data.append("fill", (value == "Yes").toString());
-
-        console.log((value == "Yes"))
 
         fetch(API_ENDPOINT + "/digitize", {
             method: "POST",
@@ -69,7 +72,11 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
                 <Collapse in={dropzoneSet}>
                     <div>
                         <h6>Now, choose your <strong>output file type.</strong></h6>
-                        <a href="#">Not sure which type to choose?</a>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            setPopupType(false);
+                            setPopup(true);
+                        }}>Not sure which type to choose?</a>
 
                         <br />
                         <br />
@@ -98,7 +105,11 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
                     <div>
                         Great, would you like your file to be <strong>filled?</strong>
                         <br />
-                        <a href="#">Show me what this means.</a>
+                        <a href="#" onClick={(e) => {
+                            e.preventDefault();
+                            setPopupType(true);
+                            setPopup(true);
+                        }}>Show me what this means.</a>
 
                         <br />
                         <br />
@@ -155,6 +166,44 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
             <br />
             <br />
             <Footer sticky={dropdown != "Output File Type"} />
+
+            <Modal centered show={popup} onHide={() => setPopup(false)} style={{textAlign: "center"}}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{popupType ? "Filled Embroidery" : "What File Type Should I Use?"}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {
+                        popupType ? 
+                        <div>
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                                <div style={{width: "50%", margin: "10px"}}>
+                                    <h3>Filled</h3>
+                                    <img src={FilledImage} style={{width: "80%"}} />
+                                </div>
+                                <div style={{width: "50%", margin: "10px"}}>
+                                    <h3>Not Filled</h3>
+                                    <img src={UnfilledImage} style={{width: "75%"}} />
+                                    <br />
+                                    <i style={{fontSize: 10}}>The Avengers Logo is a trademark of Disney.</i>
+                                </div>
+                            </div>
+                            <i style={{fontSize: 15}}>Selecting the <strong>fill</strong> option may take a longer time to digitize.</i>
+                        </div>
+                        :
+                        <div>
+                            Different embroidery machines accept different file types for their embroidery designs.
+                            <a href="https://www.embroidery.com/machine-embroidery-formats.ec"> Here is a table with common embroidery machines and what files they accept. </a>
+                            Note that many machines accept multiple file types and aren't limited by what is listed below.
+
+                            <br />
+
+                            <i style={{fontSize: 10}}>If your Machine is not listed, go with one of the common formats(<strong>PES, PEC, DST, or EXP</strong>)</i>
+
+                        </div>
+                    }
+                </Modal.Body>
+            </Modal>
+
         </div>
     )
 }

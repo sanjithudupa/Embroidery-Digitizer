@@ -234,6 +234,8 @@ def download_api():
 
     os.remove(app.config["TEMP_FOLDER"] + "/" + gcode)
 
+    del file_ids[request.form["uid"]]
+
     # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
     # print('/download')
     
