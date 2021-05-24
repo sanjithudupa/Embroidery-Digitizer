@@ -162,7 +162,7 @@ def about():
 #     return render_template("sim.html")
 
 @app.route("/api/digitize", methods=["POST"])
-@cross_origin()
+@cross_origin() 
 def upload():
     if request.files:
         ext = request.form["extension"]
