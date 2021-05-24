@@ -192,6 +192,8 @@ def upload():
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
+            print("saved into " + app.config["IMAGE_UPLOADS"])
+
             embroideryDone = createEmbroidery(filename, ext, 12, fill)
             gfile = open("tempFolder/" + filename + ".gcode")
             gcodeArray = convert_to_array(gfile.read())
