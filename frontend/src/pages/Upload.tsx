@@ -27,7 +27,7 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
 
     const [dropdown, setDropdown] = useState("Output File Type");
     const [value, setValue] = useState("");
-    const [popup, setPopup] = useState(true);
+    const [popup, setPopup] = useState(false);
     const [popupType, setPopupType] = useState(true);
 
     const [pressed, setPressed] = useState(false);

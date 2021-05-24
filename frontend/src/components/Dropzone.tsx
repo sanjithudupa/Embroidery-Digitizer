@@ -37,14 +37,18 @@ const Dropzone: React.FC<{setFile?: Function}> = ({setFile}) => {
     }, []);
 
     function fileDragged() {
-        file_drop_div.style.borderStyle = "solid";
-        file_drop_div.style.borderColor = "black";
-        file_drop_div.style.backgroundColor = "#f8f9fa";
+        if (file_drop_div) {
+            file_drop_div.style.borderStyle = "solid";
+            file_drop_div.style.borderColor = "black";
+            file_drop_div.style.backgroundColor = "#f8f9fa";
+        }
     }
     function fileNotDragged() {
-        file_drop_div.style.borderStyle = "dashed";
-        file_drop_div.style.borderColor = "#6c757d";
-        file_drop_div.style.backgroundColor = "transparent";
+        if (file_drop_div) {
+            file_drop_div.style.borderStyle = "dashed";
+            file_drop_div.style.borderColor = "#6c757d";
+            file_drop_div.style.backgroundColor = "transparent";
+        }
     }
 
     function resetFileUpload(){
