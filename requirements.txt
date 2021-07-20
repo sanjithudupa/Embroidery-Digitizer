@@ -1,6 +1,6 @@
 Flask-Session==0.3.1
 Flask==1.1.2
-Jinja2==2.11.2
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 Werkzeug==1.0.1
 Click==7.1.2
