@@ -20,7 +20,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 def verify_folder(config):
     if not os.path.isdir(app.config[config]):
-        os.makedir(app.config[config])
+        os.mkdir(app.config[config])
 
 
 verify_folder("OUTPUT_FOLDER")
