@@ -163,8 +163,9 @@ def convert_to_array(gcode):
 # #     return render_template("sim.html")
 
 @app.route("/api/digitize", methods=["POST"])
-@cross_origin() 
+# @cross_origin() 
 def upload():
+    print("REQ")
     if request.files:
         ext = request.form["extension"]
         fillcheck = request.form.get("fill")
@@ -244,17 +245,23 @@ def download_api():
     
     return x
 
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
 # Serve React App
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+# @app.route('/', defaults={'path': ''})
+@app.route('/<path:path>', methods=['GET'])
 def serve(path):
-    print("PING")
+    print("h")
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+
+
         
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), threaded=True)

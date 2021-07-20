@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c3fe665b.chunk.css",
+    "main.js": "/static/js/main.dd41648c.chunk.js",
+    "main.js.map": "/static/js/main.dd41648c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.2cbd11e7.js",
+    "runtime-main.js.map": "/static/js/runtime-main.2cbd11e7.js.map",
+    "static/js/2.7616c021.chunk.js": "/static/js/2.7616c021.chunk.js",
+    "static/js/2.7616c021.chunk.js.map": "/static/js/2.7616c021.chunk.js.map",
+    "static/js/3.e197cb5e.chunk.js": "/static/js/3.e197cb5e.chunk.js",
+    "static/js/3.e197cb5e.chunk.js.map": "/static/js/3.e197cb5e.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.c3fe665b.chunk.css.map": "/static/css/main.c3fe665b.chunk.css.map",
+    "static/js/2.7616c021.chunk.js.LICENSE.txt": "/static/js/2.7616c021.chunk.js.LICENSE.txt",
+    "static/media/Embroider.e420d380.png": "/static/media/Embroider.e420d380.png",
+    "static/media/FilledExample.c79c058b.png": "/static/media/FilledExample.c79c058b.png",
+    "static/media/Inkstitch.3b3f493f.png": "/static/media/Inkstitch.3b3f493f.png",
+    "static/media/UnfilledExample.752b7844.png": "/static/media/UnfilledExample.752b7844.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2cbd11e7.js",
+    "static/js/2.7616c021.chunk.js",
+    "static/css/main.c3fe665b.chunk.css",
+    "static/js/main.dd41648c.chunk.js"
+  ]
+}

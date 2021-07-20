@@ -27,7 +27,7 @@ const App: React.FC = () => {
         //     classNames="transition"
         //     key={location.key}
         //   >
-        <Router>
+        <Router basename="/">
           <div className="Router">
             <Route path="/" exact component={Home} />
             <Route path="/upload" exact >
