@@ -51,19 +51,7 @@ def convert_to_array(gcode):
             full.append([500000000,500000000])
     return (full)
 
-# Serve React App
-@app.route('/app', defaults={'path': ''}, methods=["GET"])
-@app.route('/app/<path:path>', methods=["GET"])
-def serve(path):
-    print("PING")
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/', methods=["GET"])
-def index():
-    return redirect(url_for("/app"))
 # @app.route("/")
 # def home():
 #     return redirect(url_for("about"))
@@ -255,6 +243,17 @@ def download_api():
     # print('/download')
     
     return x
+
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    print("PING")
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+        
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
