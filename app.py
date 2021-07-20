@@ -163,7 +163,7 @@ def convert_to_array(gcode):
 # #     return render_template("sim.html")
 
 @app.route("/api/digitize", methods=["POST"])
-# @cross_origin() 
+@cross_origin() 
 def upload():
     print("REQ")
     if request.files:
