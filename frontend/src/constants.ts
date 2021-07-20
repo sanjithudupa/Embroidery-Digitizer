@@ -1,4 +1,4 @@
-const API_ENDPOINT = "http://localhost:5000/api";
+const API_ENDPOINT = "https://embroidery-digitizer.herokuapp.com/api";
 
 export {
     API_ENDPOINT
