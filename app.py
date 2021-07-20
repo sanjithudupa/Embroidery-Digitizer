@@ -17,6 +17,16 @@ app.config["ALLOWED_IMAGE_EXT"] = ["SVG"]
 app.config["MAX_FILE_SIZE"] = 0.25 * 1024 * 1024
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
+def verify_folder(config):
+    if not os.path.isdir(app.config[config]):
+        os.makedir(app.config[config])
+
+
+verify_folder("OUTPUT_FOLDER")
+verify_folder("IMAGE_UPLOADS")
+verify_folder("TEMP_FOLDER")
+
 result = ""
 
 file_ids = {}
@@ -259,15 +269,9 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-def verify_folder(config):
-    if not os.path.exists(os.path.join(os.getcwd(), app.config[config])):
-        os.makedirs(os.path.join(os.getcwd(), app.config[config]))
         
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    verify_folder("OUTPUT_FOLDER")
-    verify_folder("IMAGE_UPLOADS")
-    verify_folder("TEMP_FOLDER")
-    
+
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), threaded=True)
