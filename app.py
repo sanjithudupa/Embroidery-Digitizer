@@ -7,7 +7,7 @@ sys.path.append(os.getcwd() + "/EmbroideryDigitizer/python/")
 from embroidery import createEmbroidery, cleanup # type: ignore
 import uuid
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend/build')
 cors = CORS(app)
 
 app.config["IMAGE_UPLOADS"] = "uploads"
@@ -51,115 +51,128 @@ def convert_to_array(gcode):
             full.append([500000000,500000000])
     return (full)
 
-@app.route("/")
-def home():
-    return redirect(url_for("about"))
+# Serve React App
+@app.route('/app', defaults={'path': ''}, methods=["GET"])
+@app.route('/app/<path:path>', methods=["GET"])
+def serve(path):
+    print("PING")
+    if path != "" and os.path.exists(app.static_folder + '/' + path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
-@app.route("/upload", methods=["GET"])
-def upload_image():
+@app.route('/', methods=["GET"])
+def index():
+    return redirect(url_for("/app"))
+# @app.route("/")
+# def home():
+#     return redirect(url_for("about"))
+
+# @app.route("/upload", methods=["GET"])
+# def upload_image():
  
-    # if request.method == "POST":
-    #     if request.files:
+#     # if request.method == "POST":
+#     #     if request.files:
             
-    #         image = request.files["image"]
+#     #         image = request.files["image"]
 
-    #         if not allowed_file_size(image):
-    #             print("file is too big")
-    #             return redirect(request.url)
+#     #         if not allowed_file_size(image):
+#     #             print("file is too big")
+#     #             return redirect(request.url)
 
-    #         if image.filename == "":
-    #             print("image must have a filename")
-    #             return redirect(request.url)
+#     #         if image.filename == "":
+#     #             print("image must have a filename")
+#     #             return redirect(request.url)
 
-    #         if not allowed_image(image.filename):
-    #             print("image extension not allowed")
-    #             return redirect(request.url)
-    #         else:
-    #             filename = secure_filename(image.filename)
-    #             print(type(image))
+#     #         if not allowed_image(image.filename):
+#     #             print("image extension not allowed")
+#     #             return redirect(request.url)
+#     #         else:
+#     #             filename = secure_filename(image.filename)
+#     #             print(type(image))
 
-    #             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+#     #             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 
-    #         print('image saved')
-    #         return redirect(request.url)
+#     #         print('image saved')
+#     #         return redirect(request.url)
 
-    return render_template("upload.html", result=result)
+#     return render_template("upload.html", result=result)
 
-@app.route("/preview", methods=["POST"])
-def process_image():
-    if request.files:
+# @app.route("/preview", methods=["POST"])
+# def process_image():
+#     if request.files:
         
-        ext = request.form["extension"]
+#         ext = request.form["extension"]
 
-        repetitions = 0
+#         repetitions = 0
 
-        fillcheck = request.form.get("fill")
+#         fillcheck = request.form.get("fill")
 
-        fill = False
+#         fill = False
 
-        image = request.files["image"]
+#         image = request.files["image"]
 
-        if fillcheck == "on":
-            repetitions = request.form["repetitions"]
-            fill = True
+#         if fillcheck == "on":
+#             repetitions = request.form["repetitions"]
+#             fill = True
 
-        if not allowed_file_size(image):
-            print("file is too big")
-            result = "File exceeds maximum size allowed"
-            return redirect(url_for('upload_image'))
-            # return render_template("upload.html", result="File exceeds maximum size allowed")
+#         if not allowed_file_size(image):
+#             print("file is too big")
+#             result = "File exceeds maximum size allowed"
+#             return redirect(url_for('upload_image'))
+#             # return render_template("upload.html", result="File exceeds maximum size allowed")
 
-        if image.filename == "":
-            print("image must have a filename")
-            result = "File exceeds maximum size allowed"
-            return redirect(url_for('upload_image'))
-            # return render_template("upload.html", result="Image must have a filename")
+#         if image.filename == "":
+#             print("image must have a filename")
+#             result = "File exceeds maximum size allowed"
+#             return redirect(url_for('upload_image'))
+#             # return render_template("upload.html", result="Image must have a filename")
  
-        if not allowed_image(image.filename):
-            result = "File exceeds maximum size allowed"
-            return redirect(url_for('upload_image'))
-            # return render_template("upload.html", result="Extension not allowed")
+#         if not allowed_image(image.filename):
+#             result = "File exceeds maximum size allowed"
+#             return redirect(url_for('upload_image'))
+#             # return render_template("upload.html", result="Extension not allowed")
 
-        else:
-            filename = secure_filename(image.filename)
-            print(type(image))
+#         else:
+#             filename = secure_filename(image.filename)
+#             print(type(image))
 
-            image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+#             image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            # print(createEmbroidery(filename, ext, int(repetitions), fill))
-            embroideryDone = createEmbroidery(filename, ext, int(repetitions), fill)
+#             # print(createEmbroidery(filename, ext, int(repetitions), fill))
+#             embroideryDone = createEmbroidery(filename, ext, int(repetitions), fill)
 
-            print(embroideryDone)
+#             print(embroideryDone)
 
-            gfile = open("tempFolder/" + filename + ".gcode")
+#             gfile = open("tempFolder/" + filename + ".gcode")
 
-            gcodeArray = convert_to_array(gfile.read())
+#             gcodeArray = convert_to_array(gfile.read())
 
-            cleanup(filename)
+#             cleanup(filename)
 
-            return render_template("preview.html", fname=filename, gcode_array=gcodeArray, fext=ext, toast_message=embroideryDone)
+#             return render_template("preview.html", fname=filename, gcode_array=gcodeArray, fext=ext, toast_message=embroideryDone)
 
-        print('image saved')
-        # return redirect(request.url)
+#         print('image saved')
+#         # return redirect(request.url)
 
-    return render_template("process.html", fname="upload failed", gcodeArray="", fext="")
+#     return render_template("process.html", fname="upload failed", gcodeArray="", fext="")
 
-@app.route("/download", methods=["POST"])
-def download_file():
-    x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file_name"], as_attachment=True)
-    os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
+# @app.route("/download", methods=["POST"])
+# def download_file():
+#     x = send_from_directory(app.config["OUTPUT_FOLDER"], request.form["file_name"], as_attachment=True)
+#     os.remove(app.config["OUTPUT_FOLDER"] + "/" + request.form["file_name"])
 
-    # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
-    # print('/download')
+#     # print(os.system("ls " + app.config["OUTPUT_FOLDER"]))
+#     # print('/download')
     
-    return x
+#     return x
 
-@app.route("/about", methods=["GET"])
-def about():
-    return render_template("about.html")
-# @app.route("/sim", methods=["GET"])
-# def sim():
-#     return render_template("sim.html")
+# @app.route("/about", methods=["GET"])
+# def about():
+#     return render_template("about.html")
+# # @app.route("/sim", methods=["GET"])
+# # def sim():
+# #     return render_template("sim.html")
 
 @app.route("/api/digitize", methods=["POST"])
 @cross_origin() 
@@ -245,4 +258,4 @@ def download_api():
 if __name__ == '__main__':
     # print(os.getcwd() + "../../python")
     # print(app.root_path)
-    app.run()
+    app.run(threaded=True)

@@ -51,6 +51,8 @@ const Upload: React.FC<{setEmb: Function}> = ({setEmb}) => {
             response.json().then((body) => {
                 setEmb(body);
                 history.push("/preview");
+            }).catch((err) => {
+                alert(err);
             });
         });
     }

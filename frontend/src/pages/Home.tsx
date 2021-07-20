@@ -10,6 +10,9 @@ import { CustomPlaceholder } from 'react-placeholder-image';
 
 import { Search, Clock, AppIndicator, ClockHistory, ZoomIn, Window } from "react-bootstrap-icons";
 
+import Embroider from "../assets/images/Embroider.png";
+import Inkstitch from "../assets/images/Inkstitch.png";
+
 const Home: React.FC = () => {
 
     const history = useHistory();
@@ -76,7 +79,8 @@ const Home: React.FC = () => {
                 <Modal.Body style={{display: "flex", justifyContent: "center"}}>
                     <div style={{border: "2px solid gray", borderRadius: 5, height: "230px", width: "100%", margin: 10, padding: "10px"}}>
                         <h5>InkStitch</h5>
-                        <CustomPlaceholder width={180} height={105} style={{borderRadius: 5}} />
+                        <img src={Inkstitch} style={{width: 180, height: 105, objectFit: "cover", border: "2px solid black"}} />
+                        {/* <CustomPlaceholder width={180} height={105} style={{borderRadius: 5}} /> */}
                         <br />
                         <div style={{margin: 5, display: "flex", justifyContent: "center"}}>
                             <div style={{marginLeft: 5, marginRight: 5}}>
@@ -101,8 +105,9 @@ const Home: React.FC = () => {
                         </Button>
                     </div>
                     <div style={{border: "2px solid gray", borderRadius: 5, height: "230px", width: "100%", margin: 10, padding: "10px"}}>
-                        <h5>Emb.io</h5>
-                        <CustomPlaceholder width={180} height={105} style={{borderRadius: 5}} />
+                        <h5>Embroider.App</h5>
+                        <img src={Embroider} style={{width: 180, height: 105, objectFit: "cover", border: "2px solid black"}} />
+                        {/* <CustomPlaceholder width={180} height={105} style={{borderRadius: 5}} /> */}
                         <br />
                         <div style={{margin: 5, display: "flex", justifyContent: "center"}}>
                             <div style={{marginLeft: 5, marginRight: 5}}>
